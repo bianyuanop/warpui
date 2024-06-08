@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  build-warpui:
+    image: hyperlane-warp-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['echo', 'build completed']
+
+  warpui:
+    image: hyperlane-warp-ui
+    depends_on:
+      - build-warpui
+    volumes:
+      - "$CHAIN_CONFIG:/app/src/consts/chains.yaml"
+      - "$TOKEN_CONFIG:/app/src/consts/tokens.yaml"
+    ports:
+      - "$SERVER_PORT:3000"
+    command: >
+      yarn dev
+    environment:
+      - NEXT_PUBLIC_WALLET_CONNECT_ID=12345678901234567890123456789012
